@@ -12,6 +12,13 @@ public class Race implements Runnable{
     @Override
     public void run() {
         for (int steps = 1; steps <= 100; steps ++){
+            if (Thread.currentThread().getName().equals("r") && steps%10 ==0){
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
             System.out.println(Thread.currentThread().getName() + "-->" + steps);
             //比赛是否结束了呢
             boolean flag = gameOver(steps);
