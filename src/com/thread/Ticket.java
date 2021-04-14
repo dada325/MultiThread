@@ -1,21 +1,31 @@
 package com.thread;
 
 public class Ticket implements Runnable{
-
-    private int ticketNums = 99;
+    private boolean flag = true;
+    private int ticketNums = 100;
     @Override
-    public void run() {
-        while(true) {
-            if (ticketNums < 0){
-                break;
-            }
+    public  void run() {
+        while(flag) {
             try {
-                Thread.sleep(200);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println(Thread.currentThread().getName() + "-->" + ticketNums--);
+        test();
         }
+    }
+
+    public synchronized void test() {
+        if (ticketNums <= 0){
+            flag=false;
+            return;
+        }
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(Thread.currentThread().getName() + "-->" + ticketNums--);
     }
     public static void main(String[] args){
         //一份资源
