@@ -12,13 +12,13 @@ public class SycTest {
         }
     }
 
-    static class Drawing extends Thread{
+    static class SafeDrawing extends Thread{
 
         Account account;
         int drawingMoney;
         int poketTotal;
 
-        public Drawing(Account account, int drawingMoney, String name) {
+        public SafeDrawing(Account account, int drawingMoney, String name) {
             super(name);
             this.account = account;
             this.drawingMoney = drawingMoney;
@@ -26,25 +26,31 @@ public class SycTest {
 
         @Override
         public void run() {
-            if(account.money -drawingMoney < 0){
-                return;
+            test();
+        }
+
+        public void test() {
+            synchronized (account) {
+                if (account.money - drawingMoney < 0) {
+                    return;
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                account.money -= drawingMoney;
+                poketTotal += drawingMoney;
+                System.out.println(this.getName() + " --> 账户余额" + account.money);
+                System.out.println(this.getName() + " --> 口袋里" + poketTotal);
             }
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            account.money -= drawingMoney;
-           poketTotal += drawingMoney;
-            System.out.println(this.getName() +" --> 账户余额" + account.money);
-            System.out.println(this.getName() +" --> 口袋里" + poketTotal);
         }
     }
 
     public static void main(String[] args) {
         Account account = new Account(100, "sal");
-        Drawing you = new Drawing(account, 80, "me");
-        Drawing boss = new Drawing(account, 90, "boss");
+        SafeDrawing you = new SafeDrawing(account, 80, "me");
+        SafeDrawing boss = new SafeDrawing(account, 90, "boss");
         you.start();
         boss.start();
     }
