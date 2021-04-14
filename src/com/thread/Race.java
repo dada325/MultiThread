@@ -14,7 +14,7 @@ public class Race implements Runnable{
         for (int steps = 1; steps <= 100; steps ++){
             if (Thread.currentThread().getName().equals("r") && steps%10 ==0){
                 try {
-                    Thread.sleep(1);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
